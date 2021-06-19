@@ -17,7 +17,7 @@ TOP_X_MIN = 0
 TOP_X_MAX = 100
 TOP_Z_MIN = -3.5
 TOP_Z_MAX = 0.6
-
+# 分辨率（同比放大？）
 TOP_X_DIVISION = 0.2
 TOP_Y_DIVISION = 0.2
 TOP_Z_DIVISION = 0.3
@@ -425,20 +425,20 @@ def lidar_to_top_coords(x, y):
 
 
 def lidar_to_top(lidar):
-
-    idx = np.where(lidar[:, 0] > TOP_X_MIN)
+    # 筛选符合条件的XYZ的点
+    idx = np.where(lidar[:, 0] > TOP_X_MIN) # 0
     lidar = lidar[idx]
-    idx = np.where(lidar[:, 0] < TOP_X_MAX)
-    lidar = lidar[idx]
-
-    idx = np.where(lidar[:, 1] > TOP_Y_MIN)
-    lidar = lidar[idx]
-    idx = np.where(lidar[:, 1] < TOP_Y_MAX)
+    idx = np.where(lidar[:, 0] < TOP_X_MAX) # 100
     lidar = lidar[idx]
 
-    idx = np.where(lidar[:, 2] > TOP_Z_MIN)
+    idx = np.where(lidar[:, 1] > TOP_Y_MIN) # -30
     lidar = lidar[idx]
-    idx = np.where(lidar[:, 2] < TOP_Z_MAX)
+    idx = np.where(lidar[:, 1] < TOP_Y_MAX) # 30
+    lidar = lidar[idx]
+
+    idx = np.where(lidar[:, 2] > TOP_Z_MIN) # -3.5
+    lidar = lidar[idx]
+    idx = np.where(lidar[:, 2] < TOP_Z_MAX) # 0.6
     lidar = lidar[idx]
 
     pxs = lidar[:, 0]
@@ -666,7 +666,7 @@ def compute_orientation_3d(obj, P):
     return orientation_2d, np.transpose(orientation_3d)
 
 
-def draw_projected_box3d(image, qs, color=(0, 255, 0), thickness=2):
+def draw_projected_box3d(image, qs, color=(0, 255, 0), thickness=1, is_warn=False):
     """ Draw 3d bounding box in image
         qs: (8,3) array of vertices for the 3d box in following order:
             1 -------- 0
@@ -677,6 +677,8 @@ def draw_projected_box3d(image, qs, color=(0, 255, 0), thickness=2):
           |/         |/
           6 -------- 7
     """
+    if is_warn:
+        thickness = 3
     qs = qs.astype(np.int32)
     for k in range(0, 4):
         # Ref: http://docs.enthought.com/mayavi/mayavi/auto/mlab_helper_functions.html
@@ -736,7 +738,8 @@ def draw_box3d_on_top(
             color = (0, 255, 0)
             startx = 5
         else:
-            color = heat_map_rgb(0.0, 1.0, scores[n]) if scores is not None else 255
+            # color = heat_map_rgb(0.0, 1.0, scores[n]) if scores is not None else 255
+            color = (0, 0, 255)
             startx = 85
         cv2.line(img, (u0, v0), (u1, v1), color, thickness, cv2.LINE_AA)
         cv2.line(img, (u1, v1), (u2, v2), color, thickness, cv2.LINE_AA)
@@ -744,7 +747,7 @@ def draw_box3d_on_top(
         cv2.line(img, (u3, v3), (u0, v0), color, thickness, cv2.LINE_AA)
     for n in range(len(text_lables)):
         text_pos = (startx, 25 * (n + 1))
-        cv2.putText(img, text_lables[n], text_pos, font, 0.5, color, 0, cv2.LINE_AA)
+        # cv2.putText(img, text_lables[n], text_pos, font, 0.5, color, 0, cv2.LINE_AA)
     return img
 
 

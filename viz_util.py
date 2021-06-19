@@ -178,13 +178,13 @@ def draw_lidar(
     print("====================", pc.shape)
     if fig is None:
         fig = mlab.figure(
-            figure=None, bgcolor=bgcolor, fgcolor=None, engine=None, size=(1600, 1000)
+            figure='point cloud map', bgcolor=bgcolor, fgcolor=None, engine=None, size=(800, 500)
         )
-    if color is None:
+    if color is None: # T
         color = pc[:, 2]
-    if pc_label:
+    if pc_label: # F
         color = pc[:, 4]
-    if color_by_intensity:
+    if color_by_intensity: # F
         color = pc[:, 2]
 
     mlab.points3d(
@@ -200,9 +200,9 @@ def draw_lidar(
     )
 
     # draw origin
-    mlab.points3d(0, 0, 0, color=(1, 1, 1), mode="sphere", scale_factor=0.2)
+    mlab.points3d(0, 0, 0, color=(1, 1, 1), mode="sphere", scale_factor=2)
 
-    # draw axis
+    # draw axis 画观察者的直角坐标系
     axes = np.array(
         [[2.0, 0.0, 0.0, 0.0], [0.0, 2.0, 0.0, 0.0], [0.0, 0.0, 2.0, 0.0]],
         dtype=np.float64,
@@ -231,7 +231,7 @@ def draw_lidar(
         tube_radius=None,
         figure=fig,
     )
-
+    """
     # draw fov (todo: update to real sensor spec.)
     fov = np.array(
         [[20.0, 20.0, 0.0, 0.0], [20.0, -20.0, 0.0, 0.0]], dtype=np.float64  # 45 degree
@@ -304,8 +304,10 @@ def draw_lidar(
         line_width=1,
         figure=fig,
     )
-
+    """
     # mlab.orientation_axes()
+    # azimuth: 水平面上摆放相机的位置0~360,(0: 面向车头，180：面向车背)
+    # elevation: 垂直上摆放相机的角度0~180，(90:就在车的水平面上)
     mlab.view(
         azimuth=180,
         elevation=70,
@@ -313,6 +315,7 @@ def draw_lidar(
         distance=62.0,
         figure=fig,
     )
+
     return fig
 
 

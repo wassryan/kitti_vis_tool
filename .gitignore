@@ -1,4 +1,10 @@
+**__pycache__**
+.DS_Store
 .idea/*
 imgs
 *.pdf
 *.png
+data/*
+CARLA/
+imgs/
+jupyter/
