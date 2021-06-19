@@ -44,9 +44,6 @@ kitti
 
 **Note: the above installation has been tested not work on MacOS.**
 
-## Install remotely
-Please refer to the [jupyter](jupyter/) folder for installing on a remote server and visulizing in Jupyter Notebook.
-
 ## Visualization
 
 1. 3D boxes on LiDar point cloud in volumetric mode
@@ -55,5 +52,4 @@ Please refer to the [jupyter](jupyter/) folder for installing on a remote server
 4. LiDar data on Camera image
 
 
-### KIITI Object Visualization
 refer to **vis.sh**
